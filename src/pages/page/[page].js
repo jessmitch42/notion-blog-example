@@ -5,16 +5,34 @@ import { getPage } from "@/lib/notion";
 import { Card } from "@/components/Card";
 import { Nav } from "@/components/Nav";
 
-export default function Page({ currentPage }) {
-  const router = useRouter();
-  const { page } = router.query;
-  const navItems = ["Back"]
+const El = (props) => {
+  switch (props.type) {
+    case "heading_1":
+      return <h1>{props.children}</h1>;
+    case "heading_2":
+      return <h2>{props.children}</h2>;
+    case "paragraph":
+      return <p>{props.children}</p>;
+    default:
+      return <p>{props.children}</p>;
+  }
+};
+
+export default function Page({ pageProperties, pageContent }) {
+  const navItems = ["Back"];
+  // Not used but the page ID can be retrieved from the URL
+  // const router = useRouter();
+  // const { page } = router.query;
+
+  const content = pageContent.results.map((r) => {
+    return <El type={r.type}>{r[r.type].rich_text[0]?.plain_text}</El>;
+  });
+
   return (
     <main className={styles.main}>
       <Nav items={navItems} />
-      <div>
-        <Card {...currentPage} />
-      </div>
+      <Card {...pageProperties} />
+      <div>{content}</div>
     </main>
   );
 }
@@ -27,13 +45,10 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { page } = params;
-  const currentPage = await getPage(page);
+  const pageInfo = await getPage(page);
 
-  console.log(page);
   return {
-    props: {
-      currentPage: currentPage || null,
-    },
+    props: pageInfo,
     revalidate: 1,
   };
 }

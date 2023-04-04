@@ -12,7 +12,7 @@ export const Nav = ({ items }) => (
           </li>
         );
       })}
-      <li class="nav_request-item">
+      <li className="nav_request-item">
         <Link href={`/request-topic`}>Request topic</Link>
       </li>
     </ul>

@@ -13,10 +13,25 @@ const getUsers = async () => {
   return response.results;
 };
 
-const getPage = async (id) => {
+const getPageProperties = async (id) => {
+  // Retrieves page properties, not the page content
   const response = await notion.pages.retrieve({ page_id: id });
-  console.log(response);
   return response;
+};
+
+const getPageContent = async (id) => {
+  // Retrieves page content (aka block children)
+  const response = await notion.blocks.children.list({ block_id: id });
+  return response;
+};
+
+const getPage = async (id) => {
+  const pageProperties = await getPageProperties(id);
+  const pageContent = await getPageContent(id);
+  return {
+    pageProperties,
+    pageContent,
+  };
 };
 
 const createPage = async (name) => {
@@ -32,4 +47,11 @@ const createPage = async (name) => {
   }
 };
 
-export { getDatabase, getUsers, getPage, createPage };
+export {
+  getDatabase,
+  getUsers,
+  getPage,
+  getPageProperties,
+  createPage,
+  getPageContent,
+};

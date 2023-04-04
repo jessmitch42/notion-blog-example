@@ -1,5 +1,4 @@
 export const Card = ({ id, url, object, ...props }) => {
-  console.log(props);
   const name =
     props.name ||
     props.properties?.Title?.title[0].plain_text ||
@@ -9,7 +8,7 @@ export const Card = ({ id, url, object, ...props }) => {
   return (
     <div className="card">
       <h2>
-        {object.toUpperCase()}: {name}
+        {object?.toUpperCase()}: {name}
       </h2>
       <ul>
         <li>
@@ -20,7 +19,7 @@ export const Card = ({ id, url, object, ...props }) => {
         </li>
         {url && (
           <li>
-            <span className="bold">URL: {url}</span>
+            <span className="bold">URL:</span> {url}
           </li>
         )}
         {props.type && (
