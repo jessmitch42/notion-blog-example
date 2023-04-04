@@ -13,10 +13,10 @@ export default async function handler(req, res) {
         const page = await notion.pages.create({
           parent: {
             type: "database_id",
-            database_id: process.env.NOTION_DATABASE_ID,
+            database_id: process.env.NOTION_REQUEST_DATABASE_ID,
           },
           properties: {
-            Name: {
+            Request: {
               // can only set the title when the parent is a page (not a database)
               title: [
                 {
@@ -31,7 +31,23 @@ export default async function handler(req, res) {
         res.status(201).json({ message: "post", page });
         break;
       case "PATCH":
-        res.status(200).json({ message: "patch" });
+        const { text } = JSON.parse(req.body);
+        const result = await notion.pages.update({
+          page_id: process.env.NOTION_REQUEST_DATABASE_ID,
+          properties: {
+            Request: {
+              rich_text: [
+                {
+                  type: "text",
+                  text: {
+                    content: text,
+                  },
+                },
+              ],
+            },
+          },
+        });
+        res.status(201).json({ message: "patch", result });
         break;
       default:
         res.status(405).end(`${method} Not Allowed`);

@@ -1,28 +1,55 @@
 import { Client } from "@notionhq/client";
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
-const getDatabase = async () => {
-  const response = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID,
-  });
-  return response.results;
+const queryDatabase = async (id) => {
+  try {
+    const response = await notion.databases.query({
+      database_id: id,
+    });
+    return response.results;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const retrieveDatabase = async (id) => {
+  try {
+    const response = await notion.databases.retrieve({
+      database_id: id,
+    });
+    return response.results;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getUsers = async () => {
-  const response = await notion.users.list();
-  return response.results;
+  try {
+    const response = await notion.users.list();
+    return response.results;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getPageProperties = async (id) => {
-  // Retrieves page properties, not the page content
-  const response = await notion.pages.retrieve({ page_id: id });
-  return response;
+  try {
+    // Retrieves page properties, not the page content
+    const response = await notion.pages.retrieve({ page_id: id });
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getPageContent = async (id) => {
-  // Retrieves page content (aka block children)
-  const response = await notion.blocks.children.list({ block_id: id });
-  return response;
+  try {
+    // Retrieves page content (aka block children)
+    const response = await notion.blocks.children.list({ block_id: id });
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getPage = async (id) => {
@@ -43,15 +70,44 @@ const createPage = async (name) => {
     const res = await response.json();
     return res;
   } catch (err) {
-    console.log(err);
+    console.error(err);
+  }
+};
+
+const updatePageContent = async ({ text }) => {
+  try {
+    const response = await fetch("/api/pages", {
+      method: "PATCH",
+      body: JSON.stringify({ text }),
+    });
+    const res = await response.json();
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const appendBlockChild = async ({ text }) => {
+  try {
+    const response = await fetch("/api/blocks", {
+      method: "PATCH",
+      body: JSON.stringify({ text }),
+    });
+    const res = await response.json();
+    return res;
+  } catch (err) {
+    console.error(err);
   }
 };
 
 export {
-  getDatabase,
+  queryDatabase,
+  retrieveDatabase,
   getUsers,
   getPage,
   getPageProperties,
   createPage,
   getPageContent,
+  appendBlockChild,
+  updatePageContent,
 };

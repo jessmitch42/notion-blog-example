@@ -3,17 +3,10 @@ import styles from "@/styles/Home.module.css";
 import Link from "next/link";
 import { Card } from "@/components/Card";
 import { Nav } from "@/components/Nav";
-import { getDatabase } from "@/lib/notion";
-import { CreatePageForm } from "@/components/CreatePageForm";
-import { useRouter } from "next/router";
+import { queryDatabase } from "@/lib/notion";
 
 export default function Home({ database }) {
-  const router = useRouter();
   const navItems = ["Users"];
-
-  const refreshData = () => {
-    router.replace(router.asPath);
-  };
   return (
     <>
       <Head>
@@ -42,12 +35,12 @@ export default function Home({ database }) {
 }
 
 export async function getStaticProps() {
-  const database = await getDatabase();
+  const databaseId = process.env.NOTION_DATABASE_ID;
+  const database = await queryDatabase(databaseId);
 
   return {
     props: {
       database,
     },
-    revalidate: 1,
   };
 }
