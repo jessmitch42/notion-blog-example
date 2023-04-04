@@ -1,8 +1,43 @@
-Add a .env file with:
+# Notion custom blog sample app
+
+Create a custom blog that uses Notion as a CMS. This sample app is intended to be sample code to showcase how to use the [Notion JS SDK](https://github.com/makenotion/notion-sdk-js) in a [Next.js](https://nextjs.org/). Please refer to Next.js's [documentation](https://nextjs.org/docs/getting-started) for additional information on building with Next.js.
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app)..
+
+## Running locally
+1. Set up your local project:
+
+```bash
+# Clone this repository locally
+git clone <TODO: add repo url>
+
+# Switch into this project
+cd <TODO: add path>
+
+# Install dependencies
+npm install
+```
+2. Visit [Notion's My integrations page](https://www.notion.so/my-integrations) to create an integration. Once the integration is created, make note of the API key (also known as the "Internal Integration Token").
+
+3. Create a Notion database (or decide on an existing one to use). We've created a sample database for testing purposes. Copy the [template](TODO: ADD) to your Notion workspace to use with this app.
+
+Make note of the database ID. To retrieve your database ID, view the database in Notion as a full page. It is the string of characters in the database's URL that is between the slash following your workspace name (if you named it) and the question mark. The ID is 32 characters long, containing numbers and letters.
+
+For more information, read our documentation for [setting up an integration](https://developers.notion.com/docs/create-a-notion-integration#step-3-save-the-database-id).
+
+4. Once you have your Notion API key and Notion database ID, create a `.env` file with:
 
 ```
 NOTION_API_KEY=[key]
 NOTION_DATABASE_ID=[id]
+```
+
+If your repo does not already have a `.gitignore` file, create one and add `.env` to it to ensure you are not sharing your environment variables remotely.
+
+5. Start your local server with the following command and visit `http://localhost:3000` to view the app.
+
+```bash
+npm run dev
 ```
 
 ---
