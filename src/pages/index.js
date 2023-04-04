@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 
 export default function Home({ database }) {
   const router = useRouter();
-  const navItems = ["users"];
+  const navItems = ["Users"];
 
   const refreshData = () => {
     router.replace(router.asPath);
@@ -24,22 +24,17 @@ export default function Home({ database }) {
       </Head>
       <main className={styles.main}>
         <Nav items={navItems} />
-        <hr />
         <section>
-          <h1>Notion Rest API test: Create and view pages</h1>
-          <CreatePageForm refreshData={refreshData} />
-          <div>
-            <h2>Exisitng pages</h2>
-            {database.map((d, i) => (
-              <ul className="cards" key={i}>
-                <li>
-                  <Link href={`/page/${d.id}`}>
-                    <Card {...d} />
-                  </Link>
-                </li>
-              </ul>
-            ))}
-          </div>
+          <h2>Blog posts</h2>
+          {database.map((d, i) => (
+            <ul className="cards" key={i}>
+              <li>
+                <Link href={`/page/${d.id}`}>
+                  <Card {...d} />
+                </Link>
+              </li>
+            </ul>
+          ))}
         </section>
       </main>
     </>

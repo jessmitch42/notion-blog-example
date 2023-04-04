@@ -6,7 +6,7 @@ import { Nav } from "@/components/Nav";
 export default function Users({ users }) {
   return (
     <main className={styles.main}>
-      <Nav items={["back"]} />
+      <Nav items={["Back"]} />
       <section>
         <h1>Users ({users.length})</h1>
         <ul>

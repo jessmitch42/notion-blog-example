@@ -1,21 +1,20 @@
-import { createPage } from "@/lib/notion";
+import { requestTopic } from "@/lib/notion";
 
 // No longer being used but leaving here for reference
 
 const handleSubmit = async (e) => {
   const pageName = e.target.name.value;
-  const result = await createPage(pageName);
+  const result = await requestTopic(pageName);
   // do something with result, like show success snackbar
 };
-export const CreatePageForm = ({ refreshData }) => {
+export const RequestBlogPostTopic = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     await handleSubmit(e);
-    refreshData();
   };
   return (
     <section>
-      <h3>Create a new page</h3>
+      <h3>Request a topic</h3>
       <form onSubmit={onSubmit}>
         <label htmlFor="name">
           Page name:
