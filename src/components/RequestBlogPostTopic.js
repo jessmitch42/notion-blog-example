@@ -31,7 +31,7 @@ export const RequestBlogPostTopic = () => {
       </p>
       <form onSubmit={onSubmit}>
         <label htmlFor="name">
-          Page name:
+          Topic for blog post:
           <br />
           <input type="text" id="name" />
         </label>
