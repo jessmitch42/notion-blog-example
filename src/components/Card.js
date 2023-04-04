@@ -33,12 +33,16 @@ export const Card = ({ id, url, object, ...props }) => {
             <span className="bold">Archived?:</span> {props.archived.toString()}
           </li>
         )}
-        <li>
-          <span className="bold">Created on:</span> {props.created_time}
-        </li>
-        <li>
-          <span className="bold">Last edited:</span> {props.last_edited_time}
-        </li>
+        {props.created_time && (
+          <li>
+            <span className="bold">Created on:</span> {props.created_time}
+          </li>
+        )}
+        {props.last_edited_time && (
+          <li>
+            <span className="bold">Last edited:</span> {props.last_edited_time}
+          </li>
+        )}
       </ul>
     </div>
   );
