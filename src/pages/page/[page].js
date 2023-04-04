@@ -3,14 +3,16 @@ import { useRouter } from "next/router";
 import styles from "@/styles/Home.module.css";
 import { getPage } from "@/lib/notion";
 import { Card } from "@/components/Card";
+import { Nav } from "@/components/Nav";
 
 export default function Page({ currentPage }) {
   const router = useRouter();
   const { page } = router.query;
+  const navItems = ["Back"]
   return (
     <main className={styles.main}>
+      <Nav items={navItems} />
       <div>
-        <Link href="/">Back</Link>
         <Card {...currentPage} />
       </div>
     </main>

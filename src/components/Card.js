@@ -1,27 +1,45 @@
 export const Card = ({ id, url, object, ...props }) => {
   console.log(props);
   const name =
-    props.name || props.properties?.Name.title[0].plain_text || "[no name]";
-  const created = props.created_time
-    ? new Date(props.created_time).toLocaleDateString()
-    : "n/a";
-  const lastEdited = props.created_time
-    ? new Date(props.last_edited_time).toLocaleDateString()
-    : "n/a";
+    props.name ||
+    props.properties?.Title?.title[0].plain_text ||
+    props.properties?.Name?.title[0].plain_text ||
+    "[no name]";
+
   return (
     <div className="card">
       <h2>
-        {object}: {name}
+        {object.toUpperCase()}: {name}
       </h2>
-      <p>ID:{id}</p>
-      <p>Object type: {object}</p>
-      {url && <p>URL: {url}</p>}
-      {props.type && <p>type: {props.type}</p>}
-      {typeof props.archived === "boolean" && (
-        <p>Archived?: {props.archived.toString()}</p>
-      )}
-      <p>Created on: {created}</p>
-      <p>Last edited: {lastEdited}</p>
+      <ul>
+        <li>
+          <span className="bold">ID:</span> {id}
+        </li>
+        <li>
+          <span className="bold">Object type:</span> {object}
+        </li>
+        {url && (
+          <li>
+            <span className="bold">URL: {url}</span>
+          </li>
+        )}
+        {props.type && (
+          <li>
+            <span className="bold">Type:</span> {props.type}
+          </li>
+        )}
+        {typeof props.archived === "boolean" && (
+          <li>
+            <span className="bold">Archived?:</span> {props.archived.toString()}
+          </li>
+        )}
+        <li>
+          <span className="bold">Created on:</span> {props.created_time}
+        </li>
+        <li>
+          <span className="bold">Last edited:</span> {props.last_edited_time}
+        </li>
+      </ul>
     </div>
   );
 };
