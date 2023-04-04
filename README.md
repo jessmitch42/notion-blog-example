@@ -49,6 +49,8 @@ If your repo does not already have a `.gitignore` file, create one and add `.env
 npm run dev
 ```
 
+Note: To view the `/users` tab, your integration needs access to user information. This can be set in [My integrations](https://www.notion.so/my-integrations) by navigating to the relevant integration and updating its settings under `Capabilities`.
+
 ---
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
