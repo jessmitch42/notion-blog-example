@@ -145,13 +145,17 @@ li {
 .cards {
   display: flex;
 }
-.card {
-  margin: 8px 0;
+.cards li a {
   border: solid 1px transparent;
-  padding: 8px 0;
+  display: block;
 }
-.card:hover {
+.cards li a:hover {
   border: dotted 1px black;
+}
+.card {
+  width: 100%;
+  margin: 8px 0;
+  padding: 8px 0;
 }
 
 a {
