@@ -11,11 +11,10 @@ const queryDatabase = async (id) => {
     console.error(error);
   }
 };
-
-const retrieveDatabase = async (id) => {
+const retrieveBlockChildren = async (id) => {
   try {
-    const response = await notion.databases.retrieve({
-      database_id: id,
+    const response = await notion.blocks.children.list({
+      block_id: id,
     });
     return response.results;
   } catch (error) {
@@ -60,6 +59,18 @@ const getPage = async (id) => {
     pageContent,
   };
 };
+const addTextToPage = async (text) => {
+  try {
+    const response = await fetch("/api/blocks", {
+      method: "PATCH",
+      body: JSON.stringify({ text }),
+    });
+    const res = await response.json();
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 const createPage = async (name) => {
   try {
@@ -74,40 +85,13 @@ const createPage = async (name) => {
   }
 };
 
-const updatePageContent = async ({ text }) => {
-  try {
-    const response = await fetch("/api/pages", {
-      method: "PATCH",
-      body: JSON.stringify({ text }),
-    });
-    const res = await response.json();
-    return res;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const appendBlockChild = async ({ text }) => {
-  try {
-    const response = await fetch("/api/blocks", {
-      method: "PATCH",
-      body: JSON.stringify({ text }),
-    });
-    const res = await response.json();
-    return res;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 export {
   queryDatabase,
-  retrieveDatabase,
   getUsers,
   getPage,
   getPageProperties,
   createPage,
   getPageContent,
-  appendBlockChild,
-  updatePageContent,
+  addTextToPage,
+  retrieveBlockChildren,
 };

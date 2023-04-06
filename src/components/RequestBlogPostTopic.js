@@ -1,10 +1,11 @@
-import { createPage } from "@/lib/notion";
+import { addTextToPage } from "@/lib/notion";
 import { useRouter } from "next/router";
 // No longer being used but leaving here for reference
 
 const handleSubmit = async (e) => {
   const requestText = e.target.name.value;
-  const result = await createPage(requestText);
+  console.log("updated");
+  const result = await addTextToPage(requestText);
   // do something with result, like show success snackbar
   console.log(result);
 };
