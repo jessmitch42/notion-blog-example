@@ -9,14 +9,16 @@ export default async function handler(req, res) {
         res.status(200).json({ message: "get" });
         break;
       case "POST":
-        const { name, id } = JSON.parse(req.body);
+        const { name, content } = JSON.parse(req.body);
+        const databaseId = process.env.NOTION_DATABASE_ID;
+        
         const page = await notion.pages.create({
           parent: {
             type: "database_id",
-            database_id: id,
+            database_id: databaseId,
           },
           properties: {
-            Request: {
+            Title: {
               // tip: can only set the title when the parent is a page (not a database)
               title: [
                 {
@@ -27,6 +29,15 @@ export default async function handler(req, res) {
               ],
             },
           },
+          children: [
+            {
+              object: "block",
+              type: "paragraph",
+              paragraph: {
+                rich_text: [{ type: "text", text: { content } }],
+              },
+            },
+          ],
         });
         res.status(201).json({ message: "post", page });
         break;

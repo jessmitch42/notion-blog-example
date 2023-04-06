@@ -4,10 +4,8 @@ import { useRouter } from "next/router";
 
 const handleSubmit = async (e) => {
   const requestText = e.target.name.value;
-  console.log("updated");
   const result = await addTextToPage(requestText);
   // do something with result, like show success snackbar
-  console.log(result);
 };
 
 export const RequestBlogPostTopic = () => {

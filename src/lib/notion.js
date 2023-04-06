@@ -72,11 +72,11 @@ const addTextToPage = async (text) => {
   }
 };
 
-const createPage = async (name) => {
+const createPage = async ({ name, content }) => {
   try {
     const response = await fetch("/api/pages", {
       method: "POST",
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, content }),
     });
     const res = await response.json();
     return res;
