@@ -5,7 +5,8 @@ export const Nav = ({ items }) => (
     <ul className="nav">
       {items.map((item, i) => {
         const lowercaseItem = item.toLowerCase();
-        const link = lowercaseItem === "back" ? "" : lowercaseItem;
+        const link =
+          lowercaseItem === "back" ? "" : lowercaseItem.replace(" ", "-");
         return (
           <li key={i}>
             <Link href={`/${link}`}>{item}</Link>

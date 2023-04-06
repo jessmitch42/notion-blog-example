@@ -17,7 +17,7 @@ export default async function handler(req, res) {
           },
           properties: {
             Request: {
-              // can only set the title when the parent is a page (not a database)
+              // tip: can only set the title when the parent is a page (not a database)
               title: [
                 {
                   text: {
@@ -31,23 +31,7 @@ export default async function handler(req, res) {
         res.status(201).json({ message: "post", page });
         break;
       case "PATCH":
-        const { text } = JSON.parse(req.body);
-        const result = await notion.pages.update({
-          page_id: process.env.NOTION_REQUEST_DATABASE_ID,
-          properties: {
-            Request: {
-              rich_text: [
-                {
-                  type: "text",
-                  text: {
-                    content: text,
-                  },
-                },
-              ],
-            },
-          },
-        });
-        res.status(201).json({ message: "patch", result });
+        res.status(201).json({ message: "patch" });
         break;
       default:
         res.status(405).end(`${method} Not Allowed`);

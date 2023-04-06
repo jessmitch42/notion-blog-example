@@ -6,7 +6,7 @@ import { Nav } from "@/components/Nav";
 import { queryDatabase } from "@/lib/notion";
 
 export default function Home({ database }) {
-  const navItems = ["Users"];
+  const navItems = ["Users", "Create Post"];
   return (
     <>
       <Head>

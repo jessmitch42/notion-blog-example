@@ -8,29 +8,24 @@ export default async function handler(req, res) {
       case "GET":
         res.status(200).json({ message: "get" });
         break;
+      case "POST":
+        res.status(201).json({ message: "post" });
+        break;
       case "PATCH":
         const { text } = JSON.parse(req.body);
-
-        const response = await notion.blocks.children.append({
-          block_id: process.env.NOTION_REQUEST_DATABASE_ID,
+        const result = await notion.blocks.children.append({
+          block_id: process.env.NOTION_PAGE_ID,
           children: [
             {
+              object: "block",
+              type: "paragraph",
               paragraph: {
-                rich_text: [
-                  {
-                    text: {
-                      content: text,
-                    },
-                  },
-                ],
+                rich_text: [{ type: "text", text: { content: text } }],
               },
             },
           ],
         });
-        res.status(201).json({ message: "patch", response });
-        break;
-      case "POST":
-        res.status(200).json({ message: "post" });
+        res.status(201).json({ message: "patch", result });
         break;
       default:
         res.status(405).end(`${method} Not Allowed`);
