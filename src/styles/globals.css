@@ -118,10 +118,11 @@ hr {
 .nav li {
   font-weight: bold;
   background-color: white;
-  border-bottom: black solid 1px;
 }
 .nav li a {
-  padding: 8px;
+  border-bottom: black solid 1px;
+  padding: 4px;
+  margin: 4px;
   display: block;
 }
 .nav li.nav_request-item {
