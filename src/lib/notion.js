@@ -11,6 +11,16 @@ const queryDatabase = async (id) => {
     console.error(error);
   }
 };
+const retrieveBlockChildren = async (id) => {
+  try {
+    const response = await notion.blocks.children.list({
+      block_id: id,
+    });
+    return response.results;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const getUsers = async () => {
   try {
@@ -51,7 +61,7 @@ const getPage = async (id) => {
 };
 const addTextToPage = async (text) => {
   try {
-    const response = await fetch("/api/pages", {
+    const response = await fetch("/api/blocks", {
       method: "PATCH",
       body: JSON.stringify({ text }),
     });
@@ -83,4 +93,5 @@ export {
   createPage,
   getPageContent,
   addTextToPage,
+  retrieveBlockChildren,
 };

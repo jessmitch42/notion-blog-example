@@ -1,7 +1,5 @@
 import styles from "@/styles/Home.module.css";
 import { Nav } from "@/components/Nav";
-import { RequestBlogPostTopic } from "@/components/RequestBlogPostTopic";
-import { queryDatabase } from "@/lib/notion";
 
 export default function RequestTopic({ requests }) {
   return (

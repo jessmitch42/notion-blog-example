@@ -9,11 +9,11 @@ export default async function handler(req, res) {
         res.status(200).json({ message: "get" });
         break;
       case "POST":
-        const { name } = JSON.parse(req.body);
+        const { name, id } = JSON.parse(req.body);
         const page = await notion.pages.create({
           parent: {
             type: "database_id",
-            database_id: process.env.NOTION_REQUEST_DATABASE_ID,
+            database_id: id,
           },
           properties: {
             Request: {
