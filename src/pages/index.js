@@ -19,15 +19,15 @@ export default function Home({ database }) {
         <Nav items={navItems} />
         <section>
           <h2>Blog posts</h2>
-          {database.map((d, i) => (
-            <ul className="cards" key={i}>
-              <li>
+          <ul className="cards">
+            {database.map((d, i) => (
+              <li key={i}>
                 <Link href={`/page/${d.id}`}>
                   <Card {...d} />
                 </Link>
               </li>
-            </ul>
-          ))}
+            ))}
+          </ul>
         </section>
       </main>
     </>

@@ -11,14 +11,14 @@ const handleSubmit = async (e) => {
 };
 export const CreatePageForm = () => {
   const router = useRouter();
-  const refreshData = () => {
-    router.replace(router.asPath);
+  const goBack = () => {
+    router.back();
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     await handleSubmit(e);
-    refreshData();
+    goBack();
   };
   return (
     <section>

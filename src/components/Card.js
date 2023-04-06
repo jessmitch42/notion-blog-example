@@ -1,3 +1,5 @@
+import ArchiveButton from "./ArchiveButton";
+
 export const Card = ({ id, url, object, ...props }) => {
   const name =
     props.name ||
@@ -7,42 +9,47 @@ export const Card = ({ id, url, object, ...props }) => {
 
   return (
     <div className="card">
-      <h2>
-        {object?.toUpperCase()}: {name}
-      </h2>
-      <ul>
-        <li>
-          <span className="bold">ID:</span> {id}
-        </li>
-        <li>
-          <span className="bold">Object type:</span> {object}
-        </li>
-        {url && (
+      <div className="card-content">
+        <h2>
+          {object?.toUpperCase()}: {name}
+        </h2>
+        <ul>
           <li>
-            <span className="bold">URL:</span> {url}
+            <span className="bold">ID:</span> {id}
           </li>
-        )}
-        {props.type && (
           <li>
-            <span className="bold">Type:</span> {props.type}
+            <span className="bold">Object type:</span> {object}
           </li>
-        )}
-        {typeof props.archived === "boolean" && (
-          <li>
-            <span className="bold">Archived?:</span> {props.archived.toString()}
-          </li>
-        )}
-        {props.created_time && (
-          <li>
-            <span className="bold">Created on:</span> {props.created_time}
-          </li>
-        )}
-        {props.last_edited_time && (
-          <li>
-            <span className="bold">Last edited:</span> {props.last_edited_time}
-          </li>
-        )}
-      </ul>
+          {url && (
+            <li>
+              <span className="bold">URL:</span> {url}
+            </li>
+          )}
+          {props.type && (
+            <li>
+              <span className="bold">Type:</span> {props.type}
+            </li>
+          )}
+          {typeof props.archived === "boolean" && (
+            <li>
+              <span className="bold">Archived?:</span>{" "}
+              {props.archived.toString()}
+            </li>
+          )}
+          {props.created_time && (
+            <li>
+              <span className="bold">Created on:</span> {props.created_time}
+            </li>
+          )}
+          {props.last_edited_time && (
+            <li>
+              <span className="bold">Last edited:</span>{" "}
+              {props.last_edited_time}
+            </li>
+          )}
+        </ul>
+      </div>
+      <span>{object === "page" && <ArchiveButton pageId={id}/>}</span>
     </div>
   );
 };

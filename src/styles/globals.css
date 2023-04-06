@@ -143,6 +143,7 @@ li {
 
 .cards {
   display: flex;
+  flex-direction: column;
 }
 .cards li a {
   border: solid 1px transparent;
@@ -153,6 +154,10 @@ li {
 }
 .card {
   width: 100%;
+  display: flex;
+}
+.card  .card-content {
+  flex: 1;
 }
 
 .content {
