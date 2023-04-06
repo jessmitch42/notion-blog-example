@@ -14,7 +14,6 @@ export default async function handler(req, res) {
         break;
       case "POST":
         const { sortType } = JSON.parse(req.body);
-        console.log(databaseId);
         const response = await notion.databases.query({
           database_id: databaseId,
           sorts: [
