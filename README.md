@@ -2,6 +2,8 @@
 
 Create a custom blog that uses Notion as a CMS. This sample app is intended to be sample code to showcase how to use the [Notion JS SDK](https://github.com/makenotion/notion-sdk-js) in a [Next.js](https://nextjs.org/). Please refer to Next.js's [documentation](https://nextjs.org/docs/getting-started) for additional information on building with Next.js.
 
+![Home page with sample data](/blog_example.png)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app)..
 
 ## Running locally
