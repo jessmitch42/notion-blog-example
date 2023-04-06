@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { Client } from "@notionhq/client";
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const databaseId = process.env.NOTION_DATABASE_ID;
 
 export default async function handler(req, res) {
   try {
@@ -10,8 +11,6 @@ export default async function handler(req, res) {
         break;
       case "POST":
         const { name, content } = JSON.parse(req.body);
-        const databaseId = process.env.NOTION_DATABASE_ID;
-        
         const page = await notion.pages.create({
           parent: {
             type: "database_id",
@@ -42,7 +41,14 @@ export default async function handler(req, res) {
         res.status(201).json({ message: "post", page });
         break;
       case "PATCH":
-        res.status(201).json({ message: "patch" });
+        const { pageId } = JSON.parse(req.body);
+
+        const existingPage = await notion.pages.update({
+          page_id: pageId,
+          archived: true,
+        });
+
+        res.status(201).json({ message: "post", page: existingPage });
         break;
       default:
         res.status(405).end(`${method} Not Allowed`);

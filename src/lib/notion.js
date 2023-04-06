@@ -85,6 +85,19 @@ const createPage = async ({ name, content }) => {
   }
 };
 
+const archivePage = async (pageId) => {
+  try {
+    const response = await fetch("/api/pages", {
+      method: "PATCH",
+      body: JSON.stringify({ pageId }),
+    });
+    const res = await response.json();
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export {
   queryDatabase,
   getUsers,
@@ -94,4 +107,5 @@ export {
   getPageContent,
   addTextToPage,
   retrieveBlockChildren,
+  archivePage,
 };
