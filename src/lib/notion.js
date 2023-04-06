@@ -11,6 +11,19 @@ const queryDatabase = async (id) => {
     console.error(error);
   }
 };
+const sortDatabase = async (sortType) => {
+  try {
+    const response = await fetch("/api/databases", {
+      method: "POST",
+      body: JSON.stringify({ sortType }),
+    });
+
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};
 const retrieveBlockChildren = async (id) => {
   try {
     const response = await notion.blocks.children.list({
@@ -108,4 +121,5 @@ export {
   addTextToPage,
   retrieveBlockChildren,
   archivePage,
+  sortDatabase,
 };

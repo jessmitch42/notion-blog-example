@@ -3,10 +3,19 @@ import styles from "@/styles/Home.module.css";
 import Link from "next/link";
 import { Card } from "@/components/Card";
 import { Nav } from "@/components/Nav";
-import { queryDatabase } from "@/lib/notion";
+import { queryDatabase, sortDatabase } from "@/lib/notion";
+import { useState } from "react";
 
 export default function Home({ database }) {
+  const [sortedDatabase, setSortedDatabase] = useState(null);
+
   const navItems = ["Users", "Create Post"];
+  const onChange = async (e) => {
+    const sortType = e.target.value;
+    const list = await sortDatabase(sortType);
+    setSortedDatabase(list.response.results);
+  };
+
   return (
     <>
       <Head>
@@ -19,8 +28,16 @@ export default function Home({ database }) {
         <Nav items={navItems} />
         <section>
           <h2>Blog posts</h2>
+          <label for="sort">Sort blog posts:</label>
+          <select onChange={onChange} name="sort" id="sort">
+            <option selected disabled>
+              Options
+            </option>
+            <option value="ascending">Ascending</option>
+            <option value="descending">Descending</option>
+          </select>
           <ul className="cards">
-            {database.map((d, i) => (
+            {(sortedDatabase || database).map((d, i) => (
               <li key={i}>
                 <Link href={`/page/${d.id}`}>
                   <Card {...d} />
