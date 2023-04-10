@@ -3,34 +3,53 @@ import styles from "@/styles/Home.module.css";
 import Link from "next/link";
 import { Card } from "@/components/Card";
 import { Nav } from "@/components/Nav";
-import { queryDatabase, sortDatabase } from "@/lib/notion";
-import { useEffect, useState } from "react";
+import { queryDatabase, filterAndSortDatabase } from "@/lib/notion";
+import { useCallback, useEffect, useState } from "react";
+import SortFilterBar from "@/components/SortFilterBar";
 
 export default function Home({ database }) {
-  const [sortType, setSortType] = useState(null);
-  const [sortedDatabase, setSortedDatabase] = useState(null);
-
   const navItems = ["Users", "Create Post"];
 
-  const handleSort = async (type) => {
-    const list = await sortDatabase(type);
-    setSortType(type);
-    setSortedDatabase(list.response.results);
-  };
+  const [sortType, setSortType] = useState(null);
+  const [filterText, setFilterText] = useState(null);
+  const [processedDatabase, setProcessedDatabase] = useState(null);
+
+  const handleSort = useCallback(
+    async (type) => {
+      const list = await filterAndSortDatabase(filterText, type);
+      setProcessedDatabase(list.response.results);
+      setSortType(type);
+    },
+    [filterText]
+  );
 
   useEffect(() => {
     /**
      * If the list has been sorted and a post is archived, we need to update the sorted list.
      */
-    if (sortType && database.length < sortedDatabase.length) {
+    if (
+      (sortType || filterText) &&
+      database.length < processedDatabase.length
+    ) {
       handleSort(sortType);
     }
-  }, [database, sortedDatabase, sortType]);
+  }, [database, processedDatabase, sortType]);
 
-  const onChange = async (e) => {
+  const onSortChange = async (e) => {
     const type = e.target.value;
-    handleSort(type);
+    await handleSort(type);
   };
+
+  const handleFilter = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const text = e.target.search.value;
+      const list = await filterAndSortDatabase(text, sortType);
+      setProcessedDatabase(list.response.results);
+      setFilterText(text);
+    },
+    [sortType]
+  );
 
   return (
     <>
@@ -44,16 +63,12 @@ export default function Home({ database }) {
         <Nav items={navItems} />
         <section>
           <h2>Blog posts</h2>
-          <label htmlFor="sort">Sort blog posts:</label>
-          <select onChange={onChange} name="sort" id="sort">
-            <option defaultValue disabled>
-              Options
-            </option>
-            <option value="ascending">Ascending</option>
-            <option value="descending">Descending</option>
-          </select>
+          <SortFilterBar
+            onSortChange={onSortChange}
+            handleFilter={handleFilter}
+          />
           <ul className="cards">
-            {(sortedDatabase || database).map((d, i) => (
+            {(processedDatabase || database).map((d, i) => (
               <li key={i}>
                 <Link href={`/page/${d.id}`}>
                   <Card {...d} />
