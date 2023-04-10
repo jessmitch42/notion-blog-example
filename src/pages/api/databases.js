@@ -13,15 +13,13 @@ export default async function handler(req, res) {
         res.status(200).json({ message: "patch" });
         break;
       case "POST":
-        const { sortType } = JSON.parse(req.body);
+        const options = JSON.parse(req.body);
+        /** Handles sorts and filters.
+         * Options are defined in notion.js
+         */
         const response = await notion.databases.query({
           database_id: databaseId,
-          sorts: [
-            {
-              property: "Title",
-              direction: sortType,
-            },
-          ],
+          ...options,
         });
         res.status(200).json({ message: "post", response });
         break;

@@ -11,11 +11,36 @@ const queryDatabase = async (id) => {
     console.error(error);
   }
 };
-const sortDatabase = async (sortType) => {
+
+const filterAndSortDatabase = async (filterText, sortType) => {
+  let options = {};
+  if (filterText) {
+    options = {
+      ...options,
+      filter: {
+        property: "Title",
+        rich_text: {
+          contains: filterText,
+        },
+      },
+    };
+  }
+  if (sortType) {
+    options = {
+      ...options,
+      sorts: [
+        {
+          property: "Title",
+          direction: sortType,
+        },
+      ],
+    };
+  }
+  console.log(options);
   try {
     const response = await fetch("/api/databases", {
       method: "POST",
-      body: JSON.stringify({ sortType }),
+      body: JSON.stringify(options),
     });
 
     const res = await response.json();
@@ -24,6 +49,7 @@ const sortDatabase = async (sortType) => {
     console.error(error);
   }
 };
+
 const retrieveBlockChildren = async (id) => {
   try {
     const response = await notion.blocks.children.list({
@@ -121,5 +147,5 @@ export {
   addTextToPage,
   retrieveBlockChildren,
   archivePage,
-  sortDatabase,
+  filterAndSortDatabase,
 };
