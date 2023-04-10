@@ -4,16 +4,32 @@ import Link from "next/link";
 import { Card } from "@/components/Card";
 import { Nav } from "@/components/Nav";
 import { queryDatabase, sortDatabase } from "@/lib/notion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home({ database }) {
+  const [sortType, setSortType] = useState(null);
   const [sortedDatabase, setSortedDatabase] = useState(null);
 
   const navItems = ["Users", "Create Post"];
-  const onChange = async (e) => {
-    const sortType = e.target.value;
-    const list = await sortDatabase(sortType);
+
+  const handleSort = async (type) => {
+    const list = await sortDatabase(type);
+    setSortType(type);
     setSortedDatabase(list.response.results);
+  };
+
+  useEffect(() => {
+    /**
+     * If the list has been sorted and a post is archived, we need to update the sorted list.
+     */
+    if (sortType && database.length < sortedDatabase.length) {
+      handleSort(sortType);
+    }
+  }, [database, sortedDatabase, sortType]);
+
+  const onChange = async (e) => {
+    const type = e.target.value;
+    handleSort(type);
   };
 
   return (
@@ -28,9 +44,9 @@ export default function Home({ database }) {
         <Nav items={navItems} />
         <section>
           <h2>Blog posts</h2>
-          <label for="sort">Sort blog posts:</label>
+          <label htmlFor="sort">Sort blog posts:</label>
           <select onChange={onChange} name="sort" id="sort">
-            <option selected disabled>
+            <option defaultValue disabled>
               Options
             </option>
             <option value="ascending">Ascending</option>
