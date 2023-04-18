@@ -1,6 +1,8 @@
 import ArchiveButton from "./ArchiveButton";
 
 export const Card = ({ id, url, object, ...props }) => {
+  // this could vary depending on the database you're using.
+  // update as needed.
   const name =
     props.name ||
     props.properties?.Title?.title[0].plain_text ||

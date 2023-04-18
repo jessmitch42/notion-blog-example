@@ -49,7 +49,7 @@ const filterAndSortDatabase = async (filterText, sortType) => {
   }
 };
 
-const retrieveBlockChildren = async (id) => {
+const getBlockChildren = async (id) => {
   try {
     const response = await notion.blocks.children.list({
       block_id: id,
@@ -79,19 +79,9 @@ const getPageProperties = async (id) => {
   }
 };
 
-const getPageContent = async (id) => {
-  try {
-    // Retrieves page content (aka block children)
-    const response = await notion.blocks.children.list({ block_id: id });
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 const getPage = async (id) => {
   const pageProperties = await getPageProperties(id);
-  const pageContent = await getPageContent(id);
+  const pageContent = await getBlockChildren(id);
   return {
     pageProperties,
     pageContent,
@@ -142,9 +132,8 @@ export {
   getPage,
   getPageProperties,
   createPage,
-  getPageContent,
   addTextToPage,
-  retrieveBlockChildren,
+  getBlockChildren,
   archivePage,
   filterAndSortDatabase,
 };
