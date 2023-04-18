@@ -36,7 +36,6 @@ const filterAndSortDatabase = async (filterText, sortType) => {
       ],
     };
   }
-  console.log(options);
   try {
     const response = await fetch("/api/databases", {
       method: "POST",
