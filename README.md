@@ -1,10 +1,22 @@
 # Notion custom blog sample app
 
-Create a custom blog that uses Notion as a CMS. This sample app is intended to be sample code to showcase how to use the [Notion JS SDK](https://github.com/makenotion/notion-sdk-js) in a [Next.js](https://nextjs.org/). Please refer to Next.js's [documentation](https://nextjs.org/docs/getting-started) for additional information on building with Next.js.
+Create a custom blog that uses Notion as a CMS. This demo app is intended to be sample code to showcase how to use the [Notion JS SDK](https://github.com/makenotion/notion-sdk-js) in a [Next.js](https://nextjs.org/). Please refer to Next.js's [documentation](https://nextjs.org/docs/getting-started) for additional information on building with Next.js.
 
 ![Home page with sample data](/blog_example.png)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Notion API endpoints used
+
+This demo includes code examples using the following Notion API endpoints via the [Notion JS SDK](https://github.com/makenotion/notion-sdk-js):
+
+- notion.database.query() - [Query a database docs](https://developers.notion.com/reference/post-database-query)
+- notion.blocks.children.list() - [Retrieve block children](https://developers.notion.com/reference/get-block-children)
+- notion.blocks.children.append() - [Append block children](https://developers.notion.com/reference/patch-block-children)
+- notion.users.list() - [List all users](https://developers.notion.com/reference/get-users)
+- notion.pages.retrieve() - [Retrieve a page](https://developers.notion.com/reference/retrieve-a-page)
+- notion.pages.update() - [Update page properties](https://developers.notion.com/reference/patch-page) (See also: [Archive a page](https://developers.notion.com/reference/archive-a-page))
+- notion.pages.create() - [Create a page](https://developers.notion.com/reference/post-page)
 
 ## Running locally
 
@@ -65,6 +77,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Note: To view the `/users` tab in the app UI, your integration needs access to user information. This can be set in [My integrations](https://www.notion.so/my-integrations) by navigating to the relevant integration and updating its settings under `Capabilities`.
 
 ---
+
 ## Learn More About Next.js
 
 To learn more about Next.js, take a look at the following resources:
