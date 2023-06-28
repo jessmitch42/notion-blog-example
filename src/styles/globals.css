@@ -105,6 +105,13 @@ hr {
   width: 100%;
 }
 
+.code {
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background-color: beige;
+  font-size: 0.75rem;
+}
+
 :not(.nav) li {
   margin: 4px 0;
 }
@@ -137,8 +144,21 @@ hr {
   font-size: 1rem;
 }
 
-li {
+li:not(.show-bullet) {
   list-style-type: none;
+}
+
+blockquote {
+  background-color: lightgoldenrodyellow;
+  border-left: #000 solid 1px;
+  margin: 0;
+  padding: 2rem;
+}
+
+.callout {
+  background-color: lightseagreen;
+  padding: 2rem;
+  font-style: italic;
 }
 
 .cards {
@@ -156,7 +176,7 @@ li {
   width: 100%;
   display: flex;
 }
-.card  .card-content {
+.card .card-content {
   flex: 1;
 }
 
