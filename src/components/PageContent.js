@@ -4,12 +4,9 @@ const getPlainTextFromRichText = (richText) => {
 };
 
 // Media blocks (file, video, etc.) wil have an optional caption and a source.
-const getMediaSource = (block) => {
-  // If the block type has a caption, return it
+const getMediaSourceText = (block) => {
   let source, caption;
-  if (block[block.type].caption.length) {
-    caption = getPlainTextFromRichText(block[block.type].caption);
-  }
+
   if (block[block.type].external) {
     source = block[block.type].external.url;
   } else if (block[block.type].file) {
@@ -17,8 +14,13 @@ const getMediaSource = (block) => {
   } else {
     source = "Missing case for media block types: " + block.type;
   }
-
-  return caption ? caption + ": " + source : source;
+  // If there's a caption, return it with the source
+  if (block[block.type].caption.length) {
+    caption = getPlainTextFromRichText(block[block.type].caption);
+    return caption + ": " + source;
+  }
+  // If no caption, just return source
+  return source;
 };
 
 // Get the plain text from any block type supported by the public API.
@@ -32,8 +34,8 @@ const getText = (block) => {
   }
   // Get rich text from blocks that support it
   else if (block[block.type].rich_text) {
-    if (block.type === "toggle") console.log(block);
-    // this will be an empty string if it's an empty line
+    // This will be an empty string if it's an empty line.
+    // Note: All rich text objects include a plain_text field.
     text = getPlainTextFromRichText(block[block.type].rich_text);
   }
   // Get text for block types that don't have rich text
@@ -46,9 +48,9 @@ const getText = (block) => {
         text = "Breadcrumb: no text available";
         break;
       case "child_database":
-        text = block.child_database.title;
-        // Use "Query a database" endpoint to get rows: https://developers.notion.com/reference/post-database-query
+        // Use "Query a database" endpoint to get db rows: https://developers.notion.com/reference/post-database-query
         // Use "Retrieve a database" endpoint to get additional properties: https://developers.notion.com/reference/retrieve-a-database
+        text = block.child_database.title;
         break;
       case "child_page":
         text = block.child_page.title;
@@ -63,7 +65,7 @@ const getText = (block) => {
       case "file":
       case "image":
       case "pdf":
-        text = getMediaSource(block);
+        text = getMediaSourceText(block);
         break;
       case "equation":
         text = block.equation.expression;
@@ -72,13 +74,11 @@ const getText = (block) => {
         text = block.link_preview.url;
         break;
       case "synced_block":
-        if (block.synced_block.synced_from) {
-          text =
-            "This block is synced with a block with the following ID: " +
-            block.synced_block.synced_from[block.synced_block.synced_from.type];
-        } else {
-          text = "Source sync block that another blocked is synced with.";
-        }
+        // Provides ID for block it's synced with.
+        text = block.synced_block.synced_from
+          ? "This block is synced with a block with the following ID: " +
+            block.synced_block.synced_from[block.synced_block.synced_from.type]
+          : "Source sync block that another blocked is synced with.";
         break;
       case "table":
         // Only contains table properties.
@@ -97,6 +97,7 @@ const getText = (block) => {
   // Optional based on use case: Fetch children blocks to retrieve additional information.
   // e.g. nested bulleted lists
   if (block.has_children) {
+    // For now, we'll just flag there are children blocks.
     text = text + " (Has children)";
   }
   return text;
