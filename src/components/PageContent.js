@@ -4,19 +4,21 @@ const getPlainTextFromRichText = (richText) => {
 };
 
 // Media blocks (file, video, etc.) wil have an optional caption and a source.
-const getBlockCaptionOrSourceURL = (block) => {
+const getMediaSource = (block) => {
   // If the block type has a caption, return it
+  let source, caption;
   if (block[block.type].caption.length) {
-    return getPlainTextFromRichText(block[block.type].caption);
+    caption = getPlainTextFromRichText(block[block.type].caption);
   }
-  // Otherwise, return the source
-  else if (block[block.type].external) {
-    return block[block.type].external.url;
+  if (block[block.type].external) {
+    source = block[block.type].external.url;
   } else if (block[block.type].file) {
-    return block[block.type].file.url;
+    source = block[block.type].file.url;
   } else {
-    return "Missing case for media block types: " + block.type;
+    source = "Missing case for media block types: " + block.type;
   }
+
+  return caption ? caption + ": " + source : source;
 };
 
 // Get the plain text from any block type supported by the public API.
@@ -30,6 +32,7 @@ const getText = (block) => {
   }
   // Get rich text from blocks that support it
   else if (block[block.type].rich_text) {
+    if (block.type === "toggle") console.log(block);
     // this will be an empty string if it's an empty line
     text = getPlainTextFromRichText(block[block.type].rich_text);
   }
@@ -60,7 +63,7 @@ const getText = (block) => {
       case "file":
       case "image":
       case "pdf":
-        text = getBlockCaptionOrSourceURL(block);
+        text = getMediaSource(block);
         break;
       case "equation":
         text = block.equation.expression;
@@ -78,12 +81,13 @@ const getText = (block) => {
         }
         break;
       case "table":
-        // todo: how to get table contents?
-        text = "Table: todo";
+        // Only contains table properties.
+        // Fetch children blocks for more details.
+        text = "Table width: " + block.table.table_width;
         break;
       case "table_of_contents":
-        // todo: how to get contents?
-        text = "Table of contents: todo";
+        // Does not include text from ToC; just the color
+        text = "Table of contents color: " + block.table_of_contents.color;
         break;
       default:
         text = block.type + " needs case added";
@@ -119,13 +123,25 @@ const El = (props) => {
       return <blockquote>{props.children}</blockquote>;
     case "callout":
       return <div className="callout">{props.children}</div>;
+    case "to_do":
+      return (
+        <div>
+          {/* Todo: add checkbox functionality */}
+          <input type="checkbox" />
+          <span>{props.children}</span>
+        </div>
+      );
+    case "to_do":
+      return <span>{props.children}</span>;
     case "numbered_list_item":
+      // Todo: add logic for sibling li's being in the same ol
       return (
         <ol>
           <li className="show-bullet">{props.children}</li>
         </ol>
       );
-    case "bulleted_list_item": // there should be some logic added for sibling li's being in the same ul/ol
+    case "bulleted_list_item":
+      // Todo: add logic for sibling li's being in the same ul
       return (
         <ul>
           <li className="show-bullet">{props.children}</li>
