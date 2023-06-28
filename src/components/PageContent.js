@@ -1,45 +1,55 @@
+// Take rich text array from a block child and return the plain text.
 const getRichText = (richText) => {
-  // todo mention page title bug?
   return richText.map((t) => t.plain_text).join(", ");
 };
+
+// Media blocks (file, video, etc.)
 const getBlockCaptionOrSourceURL = (block) => {
+  // If the block type has a caption, return it
   if (block[block.type].caption.length) {
-    return block.type + " caption: " + getRichText(block[block.type].caption);
-  } else if (block[block.type].external) {
-    return block.type + " external URL: " + block[block.type].external.url;
+    return getRichText(block[block.type].caption);
+  }
+  // Otherwise, return the source
+  else if (block[block.type].external) {
+    return block[block.type].external.url;
   } else if (block[block.type].file) {
-    return block.type + " file URL: " + block[block.type].file.url;
+    return block[block.type].file.url;
+  } else {
+    return "Missing case for media block types: " + block.type;
   }
 };
 
+// Get the plain text from any block type supported by the public API.
+// Some blocks will require fetching the child blocks.
 const getText = (block) => {
   let text;
+
+  // The public API does not support all block types yet
   if (block.type === "unsupported") {
-    // 'template' is unsupported
     text = "Unsupported block type";
-  } else if (block[block.type].rich_text) {
-    // Only some blocks support rich text
+  }
+  // Get rich text from blocks that support it
+  else if (block[block.type].rich_text) {
     const richText = getRichText(block[block.type].rich_text);
-    // Early out is it's an empty line
-    if (!richText) return "";
-    // return the rich text for the block type
-    text = getRichText(block[block.type].rich_text);
-  } else {
-    // Get text for block types that don't have rich text
+    // this will be an empty string if it's an empty line
+    text = richText;
+  }
+  // Get text for block types that don't have rich text
+  else {
     switch (block.type) {
       case "bookmark":
-        text = "Bookmark URL: " + block.bookmark.url;
+        text = block.bookmark.url;
         break;
       case "breadcrumb":
         text = "Breadcrumb: no text available";
         break;
       case "child_database":
-        text = "Child database title: " + block.child_database.title;
+        text = block.child_database.title;
         // Use "Query a database" endpoint to get rows: https://developers.notion.com/reference/post-database-query
         // Use "Retrieve a database" endpoint to get additional properties: https://developers.notion.com/reference/retrieve-a-database
         break;
       case "child_page":
-        text = "Child page title: " + block.child_page.title;
+        text = block.child_page.title;
         break;
       case "column_list":
         text = "Column list: no text available";
@@ -54,10 +64,10 @@ const getText = (block) => {
         text = getBlockCaptionOrSourceURL(block);
         break;
       case "equation":
-        text = "Equation: " + block.equation.expression;
+        text = block.equation.expression;
         break;
       case "link_preview":
-        text = "Link preview URL: " + block.link_preview.url;
+        text = block.link_preview.url;
         break;
       case "synced_block":
         if (block.synced_block.synced_from) {
@@ -65,7 +75,7 @@ const getText = (block) => {
             "This block is synced with a block with the following ID: " +
             block.synced_block.synced_from[block.synced_block.synced_from.type];
         } else {
-          text = "Synced block: synced_from ID n/a";
+          text = "Source sync block that another blocked is synced with.";
         }
         break;
       case "table":
@@ -81,13 +91,16 @@ const getText = (block) => {
         break;
     }
   }
+  // Fetch children blocks to retrieve additional information.
+  // e.g. nested bulleted lists
   if (block.has_children) {
-    text = text + " get children";
+    text = text + " (Has children)";
   }
   return text;
 };
 
 // Expand as needed.
+// This is optional: use if you want to display the block type as the matching HTML element.
 const El = (props) => {
   switch (props.type) {
     case "heading_1":
@@ -99,6 +112,7 @@ const El = (props) => {
     case "paragraph":
       return <p>{props.children}</p>;
     case "code":
+    case "equation":
       return <code className="code">{props.children}</code>;
     case "divider":
       return <hr />;
@@ -113,7 +127,11 @@ const El = (props) => {
         </ol>
       );
     case "bulleted_list_item": // there should be some logic added for sibling li's being in the same ul/ol
-      return <li className="show-bullet">{props.children}</li>;
+      return (
+        <ul>
+          <li className="show-bullet">{props.children}</li>
+        </ul>
+      );
     default:
       return (
         <p>
@@ -170,31 +188,3 @@ const blockTypes = [
   "to_do",
   "toggle",
 ];
-
-// Bookmark  x
-// Breadcrumb x
-// Bulleted list item x
-// Callout x
-// Child database x
-// Child page x
-// Code x
-// Column list and column x
-// Divider x
-// Embed
-// Equation x
-// File x
-// Headings xx
-// Image x
-// Link Preview x
-// Mention
-// Numbered list item x
-// Paragraph x
-// PDF x
-// Quote x
-// Synced block x
-// Table x
-// Table of contents x
-// Template - unsupported
-// To do x
-// Toggle blocks x
-// Video x
