@@ -1,13 +1,13 @@
 // Take rich text array from a block child and return the plain text.
-const getRichText = (richText) => {
+const getPlainTextFromRichText = (richText) => {
   return richText.map((t) => t.plain_text).join(", ");
 };
 
-// Media blocks (file, video, etc.)
+// Media blocks (file, video, etc.) wil have an optional caption and a source.
 const getBlockCaptionOrSourceURL = (block) => {
   // If the block type has a caption, return it
   if (block[block.type].caption.length) {
-    return getRichText(block[block.type].caption);
+    return getPlainTextFromRichText(block[block.type].caption);
   }
   // Otherwise, return the source
   else if (block[block.type].external) {
@@ -30,9 +30,8 @@ const getText = (block) => {
   }
   // Get rich text from blocks that support it
   else if (block[block.type].rich_text) {
-    const richText = getRichText(block[block.type].rich_text);
     // this will be an empty string if it's an empty line
-    text = richText;
+    text = getPlainTextFromRichText(block[block.type].rich_text);
   }
   // Get text for block types that don't have rich text
   else {
@@ -91,7 +90,7 @@ const getText = (block) => {
         break;
     }
   }
-  // Fetch children blocks to retrieve additional information.
+  // Optional based on use case: Fetch children blocks to retrieve additional information.
   // e.g. nested bulleted lists
   if (block.has_children) {
     text = text + " (Has children)";
