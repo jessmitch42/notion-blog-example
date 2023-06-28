@@ -11,10 +11,11 @@ const getBlockCaptionOrSourceURL = (block) => {
     return block.type + " file URL: " + block[block.type].file.url;
   }
 };
+
 const getText = (block) => {
   let text;
   if (block.type === "unsupported") {
-    // todo: template is unsupported
+    // 'template' is unsupported
     text = "Unsupported block type";
   } else if (block[block.type].rich_text) {
     // Only some blocks support rich text
@@ -22,12 +23,9 @@ const getText = (block) => {
     // Early out is it's an empty line
     if (!richText) return "";
     // return the rich text for the block type
-    text = block.type + ": " + getRichText(block[block.type].rich_text);
+    text = getRichText(block[block.type].rich_text);
   } else {
     // Get text for block types that don't have rich text
-    console.log(block.type);
-    console.log(block);
-
     switch (block.type) {
       case "bookmark":
         text = "Bookmark URL: " + block.bookmark.url;
@@ -62,7 +60,6 @@ const getText = (block) => {
         text = "Link preview URL: " + block.link_preview.url;
         break;
       case "synced_block":
-        console.log(block);
         if (block.synced_block.synced_from) {
           text =
             "This block is synced with a block with the following ID: " +
@@ -79,11 +76,8 @@ const getText = (block) => {
         // todo: how to get contents?
         text = "Table of contents: todo";
         break;
-      case "template":
-        text = "Template is unsupported";
-        break;
       default:
-        text = "needs case" + block.type;
+        text = block.type + " needs case added";
         break;
     }
   }
@@ -92,26 +86,39 @@ const getText = (block) => {
   }
   return text;
 };
-// This is not an exhaustive list of options provided by Notion.
+
 // Expand as needed.
 const El = (props) => {
-  const plainText = getText(props.block);
   switch (props.type) {
     case "heading_1":
-      return <h1>{plainText}</h1>;
+      return <h1>{props.children}</h1>;
     case "heading_2":
-      return <h2>{plainText}</h2>;
+      return <h2>{props.children}</h2>;
     case "heading_3":
-      return <h3>{plainText}</h3>;
+      return <h3>{props.children}</h3>;
     case "paragraph":
-      return <p>{plainText}</p>;
+      return <p>{props.children}</p>;
+    case "code":
+      return <code className="code">{props.children}</code>;
+    case "divider":
+      return <hr />;
+    case "quote":
+      return <blockquote>{props.children}</blockquote>;
+    case "callout":
+      return <div className="callout">{props.children}</div>;
+    case "numbered_list_item":
+      return (
+        <ol>
+          <li className="show-bullet">{props.children}</li>
+        </ol>
+      );
+    case "bulleted_list_item": // there should be some logic added for sibling li's being in the same ul/ol
+      return <li className="show-bullet">{props.children}</li>;
     default:
       return (
-        <div>
-          <b>{plainText}</b>
-          <br />
-          <br />
-        </div>
+        <p>
+          <b>{props.children}</b>
+        </p>
       );
   }
 };
@@ -120,21 +127,20 @@ export default function PageContent({ pageContent }) {
   if (!pageContent) {
     return <div className="content"></div>;
   }
-  // const types = pageContent.reduce((acc, int) => {
-  //   console.log(acc.indexOf(int.type));
-  //   if (acc.indexOf(int.type) < 0) {
-  //     acc.push(int.type);
-  //   }
-  //   return acc;
-  // }, []);
-  // console.log(types);
-  const content = pageContent.map((r, i) => {
-    return <El key={i} type={r.type} block={r} />;
+
+  const formattedContent = pageContent.map((block, i) => {
+    const plainText = getText(block);
+    return (
+      <El key={i} type={block.type}>
+        {plainText}
+      </El>
+    );
   });
 
-  return <div className="content">{content}</div>;
+  return <div className="content">{formattedContent}</div>;
 }
 
+// block.type values for reference (not used in code above)
 const blockTypes = [
   "paragraph",
   "bookmark",
@@ -165,30 +171,30 @@ const blockTypes = [
   "toggle",
 ];
 
-// Bookmark
-// Breadcrumb
-// Bulleted list item
-// Callout
-// Child database
-// Child page
-// Code
-// Column list and column
-// Divider
+// Bookmark  x
+// Breadcrumb x
+// Bulleted list item x
+// Callout x
+// Child database x
+// Child page x
+// Code x
+// Column list and column x
+// Divider x
 // Embed
-// Equation
-// File
-// Headings
-// Image
-// Link Preview
+// Equation x
+// File x
+// Headings xx
+// Image x
+// Link Preview x
 // Mention
-// Numbered list item
-// Paragraph
-// PDF
-// Quote
-// Synced block
-// Table
-// Table of contents
-// Template
-// To do
-// Toggle blocks
-// Video
+// Numbered list item x
+// Paragraph x
+// PDF x
+// Quote x
+// Synced block x
+// Table x
+// Table of contents x
+// Template - unsupported
+// To do x
+// Toggle blocks x
+// Video x
